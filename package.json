@@ -2,5 +2,10 @@
   "private": true,
   "pi": {
     "extensions": ["./packages/pi-fff/src/index.ts"]
+  },
+  "dependencies": {
+    "@ff-labs/fff-bun": "0.11.0",
+    "@ff-labs/fff-node": "0.11.0",
+    "@sinclair/typebox": "0.34.41"
   }
 }
