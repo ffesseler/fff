@@ -844,6 +844,7 @@ describe("pi-fff autocomplete registration", () => {
     expect(result).toEqual({
       prefix: "@src",
       items: [
+        { value: "base", label: "base" },
         {
           value: "@src/index.ts",
           label: "index.ts",
@@ -856,7 +857,7 @@ describe("pi-fff autocomplete registration", () => {
         },
       ],
     });
-    expect(current.getSuggestions).not.toHaveBeenCalled();
+    expect(current.getSuggestions).toHaveBeenCalledTimes(1);
   });
 
   test("delegates when FFF lookup fails", async () => {
