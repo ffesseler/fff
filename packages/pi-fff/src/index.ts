@@ -618,21 +618,29 @@ export default function fffExtension(pi: ExtensionAPI) {
 
       return {
         async getSuggestions(lines, cursorLine, cursorCol, options) {
-          if (shouldEnableMentions()) {
-            try {
-              const mentionResult = await mentionProvider.getSuggestions(
-                lines,
-                cursorLine,
-                cursorCol,
-                options,
-              );
-              if (mentionResult) return mentionResult;
-            } catch {
-              // Delegate when FFF lookup is unavailable.
-            }
-          }
+          const currentResult = await current.getSuggestions(lines, cursorLine, cursorCol, options);
+          if (!shouldEnableMentions() || options.signal.aborted) return currentResult;
 
-          return current.getSuggestions(lines, cursorLine, cursorCol, options);
+          try {
+            const mentionResult = await mentionProvider.getSuggestions(
+              lines,
+              cursorLine,
+              cursorCol,
+              options,
+            );
+            if (!mentionResult || !currentResult) return mentionResult ?? currentResult;
+
+            const currentValues = new Set(currentResult.items.map((item) => item.value));
+            return {
+              prefix: mentionResult.prefix,
+              items: [
+                ...currentResult.items,
+                ...mentionResult.items.filter((item) => !currentValues.has(item.value)),
+              ],
+            };
+          } catch {
+            return currentResult;
+          }
         },
         applyCompletion(lines, cursorLine, cursorCol, item, prefix) {
           return current.applyCompletion(lines, cursorLine, cursorCol, item, prefix);
