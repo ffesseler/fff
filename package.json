@@ -5,7 +5,9 @@
   },
   "dependencies": {
     "@ff-labs/fff-bun": "0.11.0",
-    "@ff-labs/fff-node": "0.11.0",
-    "@sinclair/typebox": "0.34.41"
+    "@ff-labs/fff-node": "0.11.0"
+  },
+  "peerDependencies": {
+    "@sinclair/typebox": "*"
   }
 }
